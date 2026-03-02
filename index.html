@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<!-- ── PWA CRITICAL META ── -->
+<meta name="theme-color" content="#1A0F03">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Amore">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Amore">
+<meta name="msapplication-TileColor" content="#1A0F03">
+<meta name="msapplication-TileImage" content="icons/icon-144x144.png">
+
+<!-- ── SEO ── -->
+<meta name="description" content="Rencanakan pernikahan impian Anda. Wedding budget planner premium untuk pasangan modern Indonesia.">
+
+<!-- ── MANIFEST ── -->
+<link rel="manifest" href="manifest.json">
+
+<!-- ── APPLE ICONS ── -->
+<link rel="apple-touch-icon" href="icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="72x72"   href="icons/icon-72x72.png">
+<link rel="apple-touch-icon" sizes="96x96"   href="icons/icon-96x96.png">
+<link rel="apple-touch-icon" sizes="128x128" href="icons/icon-128x128.png">
+<link rel="apple-touch-icon" sizes="144x144" href="icons/icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192x192.png">
+
+<!-- ── FAVICON ── -->
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-96x96.png">
+
+<title>Amore — Wedding Budget Planner</title>
+
+<!-- ── FONTS ── -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap">
+
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8D5A3;
+  --gold-dark: #8B6914;
+  --cream: #FAF6EE;
+  --dark: #0E0700;
+  --dark2: #1A0F03;
+  --dark3: #2A1A08;
+  --charcoal: #3D2B12;
+  --text: #F5EDD8;
+  --text-muted: #9A8060;
+  --rose: #C4756A;
+  --sage: #7A9E7E;
+  --error: #C45A5A;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--dark);
+  color: var(--text);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 80% 80%, rgba(196,117,106,0.05) 0%, transparent 60%);
+  pointer-events:none; z-index:0;
+}
+
+/* ─── INSTALL BANNER ─── */
+#installBanner {
+  display:none;
+  position:fixed; bottom:0; left:0; right:0;
+  background: linear-gradient(135deg, var(--dark3), var(--charcoal));
+  border-top:1px solid rgba(201,168,76,0.3);
+  padding:16px 20px;
+  z-index:500;
+  animation: slideUp 0.4s ease;
+}
+#installBanner.show { display:flex; align-items:center; gap:12px; }
+.install-icon { font-size:28px; }
+.install-text { flex:1; }
+.install-title { font-size:13px; font-weight:500; color:var(--cream); }
+.install-sub { font-size:11px; color:var(--text-muted); }
+.install-btn {
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  border:none; cursor:pointer;
+  color:var(--dark); font-family:'Jost',sans-serif;
+  font-size:11px; font-weight:500;
+  letter-spacing:0.2em; text-transform:uppercase;
+  padding:10px 18px; border-radius:2px;
+}
+.install-close {
+  background:none; border:none; cursor:pointer;
+  color:var(--text-muted); font-size:18px; padding:4px;
+}
+
+/* ─── OFFLINE BANNER ─── */
+#offlineBanner {
+  display:none;
+  position:fixed; top:0; left:0; right:0;
+  background:rgba(196,90,90,0.9);
+  backdrop-filter:blur(8px);
+  padding:10px 20px;
+  text-align:center;
+  font-size:12px; letter-spacing:0.1em;
+  color:white; z-index:600;
+}
+
+/* ─── UPDATE BANNER ─── */
+#updateBanner {
+  display:none;
+  position:fixed; top:0; left:0; right:0;
+  background:rgba(201,168,76,0.95);
+  padding:12px 20px;
+  text-align:center; z-index:600;
+}
+#updateBanner button {
+  background:var(--dark); color:var(--gold);
+  border:none; padding:6px 16px; border-radius:2px;
+  font-family:'Jost',sans-serif; font-size:11px;
+  cursor:pointer; margin-left:10px;
+}
+
+/* ─── SPLASH ─── */
+#splash {
+  position:fixed; inset:0;
+  background:var(--dark);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  z-index:1000;
+  transition:opacity 0.8s ease, transform 0.8s ease;
+}
+#splash.out { opacity:0; transform:scale(1.05); pointer-events:none; }
+
+.splash-logo {
+  font-family:'Cormorant Garamond', serif;
+  font-size: clamp(56px,16vw,96px);
+  font-weight:300; letter-spacing:0.15em;
+  color: var(--gold-light);
+  text-shadow: 0 0 80px rgba(201,168,76,0.25);
+  animation: fadeUp 1.2s ease both;
+}
+.splash-tagline {
+  font-size:10px; letter-spacing:0.45em;
+  text-transform:uppercase; color:var(--text-muted);
+  margin-top:8px;
+  animation: fadeUp 1.2s 0.2s ease both;
+}
+.splash-divider {
+  width:60px; height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:28px auto;
+  animation: fadeUp 1.2s 0.3s ease both;
+}
+.splash-ornament {
+  animation: fadeUp 1.2s 0.35s ease both;
+  opacity:0.5;
+}
+.splash-btn { animation:fadeUp 1.2s 0.5s ease both; }
+.splash-sub { animation:fadeUp 1.2s 0.65s ease both; }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(18px); }
+  to { opacity:1; transform:translateY(0); }
+}
+@keyframes slideUp {
+  from { transform:translateY(100%); }
+  to { transform:translateY(0); }
+}
+
+/* ─── BUTTONS ─── */
+.btn-gold {
+  background:linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-dark));
+  background-size:200% 200%;
+  color:var(--dark); border:none; cursor:pointer;
+  font-family:'Jost',sans-serif; font-size:11px; font-weight:500;
+  letter-spacing:0.35em; text-transform:uppercase;
+  padding:16px 44px; border-radius:2px;
+  transition:all 0.3s ease; position:relative; overflow:hidden;
+}
+.btn-gold:hover { background-position:100%; box-shadow:0 6px 18px rgba(201,168,76,0.25); }
+.btn-gold:active { transform:scale(0.97); }
+.btn-ghost {
+  background:none; border:none; cursor:pointer;
+  font-family:'Jost',sans-serif; font-size:11px; font-weight:400;
+  letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--text-muted); padding:12px 20px; border-radius:2px;
+  transition:color 0.2s;
+}
+.btn-ghost:hover { color:var(--gold-light); }
+.btn-outline {
+  background:transparent;
+  border:1px solid rgba(201,168,76,0.3);
+  color:var(--gold-light); cursor:pointer;
+  font-family:'Jost',sans-serif; font-size:10px; font-weight:400;
+  letter-spacing:0.25em; text-transform:uppercase;
+  padding:14px 24px; border-radius:2px;
+  transition:all 0.25s;
+}
+.btn-outline:hover {
+  border-color:var(--gold);
+  background:rgba(201,168,76,0.08);
+}
+
+/* ─── APP STRUCTURE ─── */
+#app { position:relative; z-index:1; padding-bottom:100px; }
+header {
+  position:sticky; top:0; z-index:100;
+  background:linear-gradient(180deg, var(--dark) 0%, transparent 100%);
+  backdrop-filter:blur(8px);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 22px 12px;
+  border-bottom:1px solid rgba(201,168,76,0.1);
+}
+.header-logo {
+  font-family:'Cormorant Garamond', serif;
+  font-size:26px; font-weight:300; letter-spacing:0.08em;
+  color:var(--gold-light);
+}
+.header-logo span { font-style:italic; }
+.icon-btn {
+  background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2);
+  color:var(--gold-light); cursor:pointer;
+  width:36px; height:36px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s;
+}
+.icon-btn:hover { background:rgba(201,168,76,0.12); border-color:var(--gold); }
+.icon-btn svg { width:18px; height:18px; }
+
+nav {
+  position:fixed; bottom:0; left:0; right:0;
+  background:var(--dark2); border-top:1px solid rgba(201,168,76,0.25);
+  display:flex; padding:6px 8px 8px;
+  z-index:200; gap:2px;
+}
+.nav-item {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  background:none; border:none; cursor:pointer;
+  color:var(--text-muted); padding:8px 4px 6px;
+  font-family:'Jost',sans-serif; font-size:9px; font-weight:400;
+  letter-spacing:0.08em; text-transform:uppercase;
+  border-radius:8px; transition:all 0.2s;
+}
+.nav-item svg { width:20px; height:20px; margin-bottom:4px; }
+.nav-item.active { background:rgba(201,168,76,0.1); color:var(--gold-light); }
+
+.fab {
+  position:fixed; bottom:80px; right:20px;
+  width:58px; height:58px;
+  background:linear-gradient(135deg, var(--gold-dark), var(--gold));
+  border:none; border-radius:50%; cursor:pointer;
+  box-shadow:0 8px 28px rgba(201,168,76,0.35);
+  display:flex; align-items:center; justify-content:center;
+  z-index:150; transition:all 0.3s;
+}
+.fab:hover { transform:scale(1.08); box-shadow:0 10px 32px rgba(201,168,76,0.45); }
+.fab:active { transform:scale(0.95); }
+.fab svg { width:24px; height:24px; color:var(--dark); }
+
+/* ─── PAGES ─── */
+.page { display:none; padding:0 20px 20px; }
+.page.active { display:block; }
+
+.page-header {
+  padding:28px 0 24px;
+  border-bottom:1px solid rgba(201,168,76,0.15);
+  margin-bottom:20px;
+}
+.page-eyebrow {
+  font-size:9px; letter-spacing:0.4em;
+  text-transform:uppercase; color:var(--text-muted);
+}
+.page-title {
+  font-family:'Cormorant Garamond', serif;
+  font-size:32px; font-weight:300; line-height:1.2;
+  color:var(--cream); margin:6px 0 4px;
+}
+.page-title em { font-style:italic; color:var(--gold-light); }
+.page-sub {
+  font-size:12px; color:var(--text-muted); margin-top:8px;
+  letter-spacing:0.03em;
+}
+
+.section-header {
+  display:flex; align-items:center; justify-content:space-between;
+  margin:24px 0 14px;
+}
+.section-title {
+  font-size:10px; letter-spacing:0.35em; text-transform:uppercase;
+  color:var(--gold);
+}
+
+/* ─── COUNTDOWN ─── */
+.countdown-card {
+  background:linear-gradient(135deg, var(--dark3), var(--charcoal));
+  border:1px solid rgba(201,168,76,0.2);
+  border-radius:4px; padding:22px;
+  margin-bottom:18px;
+}
+.countdown-title {
+  font-size:11px; letter-spacing:0.25em; text-transform:uppercase;
+  color:var(--text-muted); margin-bottom:16px; text-align:center;
+}
+.countdown-grid {
+  display:flex; align-items:center; justify-content:center;
+  gap:12px;
+}
+.count-unit { text-align:center; }
+.count-num {
+  font-family:'Cormorant Garamond', serif;
+  font-size:36px; font-weight:500;
+  color:var(--gold-light);
+}
+.count-label {
+  font-size:9px; letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--text-muted); margin-top:2px;
+}
+.count-sep {
+  font-size:28px; color:rgba(201,168,76,0.3);
+  margin:0 -4px;
+}
+
+/* ─── SUMMARY ─── */
+.summary-card {
+  background:linear-gradient(135deg, rgba(42,26,8,0.6), rgba(61,43,18,0.3));
+  border:1px solid rgba(201,168,76,0.25);
+  border-radius:4px; padding:20px;
+  margin-bottom:20px;
+}
+.summary-label {
+  font-size:9px; letter-spacing:0.3em; text-transform:uppercase;
+  color:var(--text-muted);
+}
+.summary-amount {
+  font-family:'Cormorant Garamond', serif;
+  font-size:38px; font-weight:400;
+  color:var(--gold-light); margin-top:4px;
+}
+.summary-amount sup { font-size:14px; color:var(--text-muted); }
+.progress-wrap {
+  position:relative; width:66px; height:66px;
+}
+.progress-ring-svg { transform:rotate(-90deg); }
+.progress-ring-bg {
+  fill:none; stroke:rgba(201,168,76,0.12);
+}
+.progress-ring-fill {
+  fill:none; stroke:var(--gold);
+  transition:stroke-dashoffset 0.6s ease;
+}
+.progress-pct {
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:500;
+  color:var(--gold-light);
+}
+.summary-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:16px; margin-top:20px; padding-top:20px;
+  border-top:1px solid rgba(201,168,76,0.15);
+}
+.summary-stat { text-align:left; }
+.stat-val {
+  font-size:15px; font-weight:400; margin-top:6px;
+}
+.stat-val.ok { color:var(--sage); }
+.stat-val.warning { color:var(--rose); }
+.stat-val.neutral { color:var(--text); }
+
+/* ─── CATEGORIES ─── */
+.categories { display:grid; gap:10px; }
+.category-card {
+  background:rgba(42,26,8,0.3);
+  border:1px solid rgba(201,168,76,0.2);
+  border-radius:4px; padding:16px;
+  cursor:pointer; transition:all 0.25s;
+  position: relative;
+}
+.category-card:hover {
+  background:rgba(42,26,8,0.5);
+  border-color:var(--gold);
+}
+.category-header {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:12px;
+}
+.category-icon {
+  font-size:24px; line-height:1;
+}
+.category-name {
+  font-size:12px; font-weight:400;
+  color:var(--cream); letter-spacing:0.05em;
+}
+.category-spent {
+  font-size:16px; font-weight:400;
+  color:var(--gold-light); margin:8px 0 6px;
+}
+.category-budget {
+  font-size:10px; color:var(--text-muted);
+}
+.category-bar {
+  height:3px; background:rgba(201,168,76,0.15);
+  border-radius:2px; overflow:hidden; margin-top:10px;
+}
+.category-bar-fill {
+  height:100%;
+  background:linear-gradient(90deg, var(--gold-dark), var(--gold));
+  transition:width 0.4s ease;
+}
+
+/* EDIT BUTTON IN CATEGORY */
+.category-edit-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(201,168,76,0.15);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold-light);
+  padding: 6px 12px;
+  border-radius: 3px;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.category-edit-btn:hover {
+  background: rgba(201,168,76,0.25);
+  border-color: var(--gold);
+}
+
+/* ─── EXPENSES ─── */
+.expense-list { display:flex; flex-direction:column; gap:10px; }
+.expense-item {
+  background:rgba(42,26,8,0.3);
+  border:1px solid rgba(201,168,76,0.2);
+  border-radius:4px; padding:14px;
+  display:flex; align-items:center; gap:12px;
+}
+.expense-icon {
+  width:38px; height:38px;
+  background:rgba(201,168,76,0.1);
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px;
+}
+.expense-info { flex:1; }
+.expense-name {
+  font-size:12px; font-weight:400;
+  color:var(--cream); margin-bottom:3px;
+}
+.expense-meta {
+  font-size:9px; color:var(--text-muted);
+}
+.expense-amount {
+  font-size:14px; font-weight:400;
+  color:var(--gold-light); text-align:right;
+}
+.expense-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+.expense-edit-btn {
+  background: none;
+  border: none;
+  color: var(--sage);
+  font-size: 9px;
+  cursor: pointer;
+  padding: 2px;
+}
+.expense-delete-btn {
+  background: none;
+  border: none;
+  color: var(--rose);
+  font-size: 9px;
+  cursor: pointer;
+  padding: 2px;
+}
+
+/* ─── GUESTS ─── */
+.guest-controls {
+  display:flex; gap:8px; margin-bottom:16px;
+}
+.guest-filter {
+  flex:1;
+  background:rgba(42,26,8,0.4);
+  border:1px solid rgba(201,168,76,0.2);
+  color:var(--text); padding:12px 16px;
+  font-family:'Jost',sans-serif; font-size:12px;
+  border-radius:3px;
+}
+.guest-filter::placeholder { color:var(--text-muted); }
+
+.guest-list { display:flex; flex-direction:column; gap:10px; }
+.guest-item {
+  background:rgba(42,26,8,0.3);
+  border:1px solid rgba(201,168,76,0.2);
+  border-radius:4px; padding:14px;
+  display:flex; align-items:center; gap:12px;
+}
+.guest-avatar {
+  width:42px; height:42px;
+  background:linear-gradient(135deg, var(--gold-dark), var(--gold));
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; font-weight:500;
+  color:var(--dark);
+}
+.guest-info { flex:1; }
+.guest-name {
+  font-size:13px; font-weight:400;
+  color:var(--cream); margin-bottom:3px;
+}
+.guest-rel {
+  font-size:9px; color:var(--text-muted);
+}
+.chip {
+  display:inline-block;
+  padding:4px 10px; border-radius:12px;
+  font-size:9px; letter-spacing:0.1em;
+  text-transform:uppercase; font-weight:500;
+}
+.chip-gold {
+  background:rgba(201,168,76,0.2);
+  color:var(--gold-light);
+}
+.chip-sage {
+  background:rgba(122,158,126,0.2);
+  color:var(--sage);
+}
+
+/* ─── CHECKLIST ─── */
+.check-progress {
+  background:rgba(42,26,8,0.3);
+  border:1px solid rgba(201,168,76,0.2);
+  border-radius:4px; padding:14px;
+  font-size:11px; color:var(--text-muted);
+  text-align:center; margin-bottom:16px;
+}
+.checklist { display:flex; flex-direction:column; gap:10px; }
+.check-item {
+  background:rgba(42,26,8,0.3);
+  border:1px solid rgba(201,168,76,0.2);
+  border-radius:4px; padding:14px;
+  display:flex; align-items:flex-start; gap:12px;
+  cursor:pointer; transition:all 0.2s;
+  position: relative;
+}
+.check-item:hover { background:rgba(42,26,8,0.45); }
+.check-item.done { opacity:0.5; }
+.check-box {
+  width:22px; height:22px; min-width:22px;
+  border:1.5px solid rgba(201,168,76,0.4);
+  border-radius:3px;
+  display:flex; align-items:center; justify-content:center;
+  transition:all 0.2s;
+}
+.check-item.done .check-box {
+  background:var(--gold);
+  border-color:var(--gold);
+}
+.check-icon {
+  color:var(--dark); font-size:12px; font-weight:700;
+  opacity:0; transition:opacity 0.2s;
+}
+.check-item.done .check-icon { opacity:1; }
+.check-content { flex:1; }
+.check-title {
+  font-size:12px; font-weight:400;
+  color:var(--cream); margin-bottom:4px;
+}
+.check-item.done .check-title { text-decoration:line-through; }
+.check-meta {
+  font-size:9px; color:var(--text-muted);
+}
+.check-due { color:var(--rose); }
+
+/* EDIT BUTTON IN CHECKLIST */
+.check-edit-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(201,168,76,0.15);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold-light);
+  padding: 4px 10px;
+  border-radius: 3px;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 10;
+}
+.check-edit-btn:hover {
+  background: rgba(201,168,76,0.25);
+  border-color: var(--gold);
+}
+
+/* ─── SETTINGS ─── */
+.settings-section {
+  margin-bottom:24px;
+  padding-bottom:24px;
+  border-bottom:1px solid rgba(201,168,76,0.15);
+}
+.settings-section:last-child { border-bottom:none; }
+.settings-title {
+  font-size:10px; letter-spacing:0.35em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:14px;
+}
+.form-group { margin-bottom:14px; }
+.form-label {
+  display:block;
+  font-size:10px; letter-spacing:0.15em; text-transform:uppercase;
+  color:var(--text-muted); margin-bottom:6px;
+}
+.form-input {
+  width:100%;
+  background:rgba(42,26,8,0.4);
+  border:1px solid rgba(201,168,76,0.2);
+  color:var(--text); padding:12px 14px;
+  font-family:'Jost',sans-serif; font-size:12px;
+  border-radius:3px; transition:all 0.2s;
+}
+.form-input:focus {
+  outline:none;
+  border-color:var(--gold);
+  background:rgba(42,26,8,0.6);
+}
+.form-input::placeholder { color:var(--text-muted); }
+
+.setting-item {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 0;
+  border-bottom:1px solid rgba(201,168,76,0.1);
+}
+.setting-item:last-child { border-bottom:none; }
+.setting-label {
+  font-size:12px; color:var(--cream); margin-bottom:4px;
+}
+.setting-sub {
+  font-size:10px; color:var(--text-muted);
+}
+.toggle {
+  width:44px; height:24px;
+  background:rgba(154,128,96,0.3);
+  border-radius:12px; cursor:pointer;
+  position:relative; transition:background 0.2s;
+  border:none;
+}
+.toggle::after {
+  content:''; position:absolute;
+  top:3px; left:3px;
+  width:18px; height:18px;
+  background:var(--text-muted);
+  border-radius:50%;
+  transition:all 0.2s;
+}
+.toggle.on { background:var(--gold); }
+.toggle.on::after { left:23px; background:var(--dark); }
+
+/* ─── MODALS ─── */
+.overlay {
+  position:fixed; inset:0;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(6px);
+  display:none; align-items:flex-end;
+  z-index:400; padding:0;
+}
+.overlay.open { display:flex; }
+
+.drawer {
+  background:var(--dark2);
+  width:100%; max-height:85vh;
+  border-radius:16px 16px 0 0;
+  padding:24px 20px 28px;
+  overflow-y:auto;
+  animation:slideUpDrawer 0.35s ease;
+}
+@keyframes slideUpDrawer {
+  from { transform:translateY(100%); }
+  to { transform:translateY(0); }
+}
+.drawer-handle {
+  width:40px; height:4px;
+  background:rgba(201,168,76,0.3);
+  border-radius:2px; margin:0 auto 20px;
+}
+.drawer-title {
+  font-size:16px; font-weight:400;
+  color:var(--gold-light); margin-bottom:20px;
+  text-align:center;
+}
+.form-row {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+/* MODAL STYLE (for edit modals) */
+.modal {
+  background: var(--dark2);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 8px;
+  width: 90%;
+  max-width: 420px;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+.modal-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-header span {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--gold-light);
+}
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 22px;
+  cursor: pointer;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+.modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(201,168,76,0.2);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.btn-cancel {
+  background: transparent;
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--text-muted);
+  padding: 12px;
+  border-radius: 3px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  border: none;
+  color: var(--dark);
+  padding: 12px;
+  border-radius: 3px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.form-field {
+  margin-bottom: 16px;
+}
+.form-field label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  background: rgba(42,26,8,0.4);
+  border: 1px solid rgba(201,168,76,0.2);
+  color: var(--text);
+  padding: 12px 14px;
+  font-family: 'Jost', sans-serif;
+  font-size: 12px;
+  border-radius: 3px;
+}
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: rgba(42,26,8,0.6);
+}
+
+/* ─── REPORT ─── */
+.report-card {
+  background:rgba(42,26,8,0.3);
+  border:1px solid rgba(201,168,76,0.2);
+  border-radius:4px; padding:16px;
+  margin-bottom:12px;
+}
+.report-row {
+  display:flex; justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid rgba(201,168,76,0.1);
+}
+.report-row:last-child { border-bottom:none; }
+.report-key {
+  font-size:11px; color:var(--text-muted);
+}
+.report-val {
+  font-size:12px; font-weight:400;
+  color:var(--gold-light);
+}
+
+/* ─── TOAST ─── */
+#toast {
+  position:fixed; bottom:100px; left:50%;
+  transform:translateX(-50%) translateY(100px);
+  background:rgba(201,168,76,0.95);
+  color:var(--dark); padding:12px 24px;
+  border-radius:24px; font-size:11px;
+  letter-spacing:0.1em; z-index:700;
+  opacity:0; transition:all 0.3s;
+}
+#toast.show {
+  opacity:1; transform:translateX(-50%) translateY(0);
+}
+
+.empty-state {
+  text-align:center; padding:40px 20px;
+  color:var(--text-muted); font-size:12px;
+}
+</style>
+</head>
+<body>
+
+<!-- OFFLINE BANNER -->
+<div id="offlineBanner">📵 Anda sedang offline — Data tersimpan lokal</div>
+
+<!-- UPDATE BANNER -->
+<div id="updateBanner">
+  <span style="font-size:12px;color:var(--dark)">✨ Versi baru tersedia!</span>
+  <button onclick="updateApp()">Update Sekarang</button>
+</div>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-logo">Amore</div>
+  <div class="splash-tagline">Wedding Budget Planner</div>
+  <div class="splash-divider"></div>
+  <svg class="splash-ornament" width="130" height="28" viewBox="0 0 130 28" fill="none">
+    <path d="M5 14 Q32 4 65 14 Q98 24 125 14" stroke="#C9A84C" stroke-width="0.8" opacity="0.7"/>
+    <path d="M15 14 Q40 8 65 14 Q90 20 115 14" stroke="#C9A84C" stroke-width="0.4" opacity="0.35"/>
+    <circle cx="65" cy="14" r="3" fill="#C9A84C" opacity="0.8"/>
+    <circle cx="22" cy="11" r="1.5" fill="#C9A84C" opacity="0.4"/>
+    <circle cx="108" cy="17" r="1.5" fill="#C9A84C" opacity="0.4"/>
+    <circle cx="44" cy="9" r="1" fill="#E8D5A3" opacity="0.3"/>
+    <circle cx="86" cy="19" r="1" fill="#E8D5A3" opacity="0.3"/>
+  </svg>
+  <div style="margin-top:38px" class="splash-btn">
+    <button class="btn-gold" onclick="enterApp()">Mulai Merencanakan</button>
+  </div>
+  <div style="margin-top:14px" class="splash-sub">
+    <button class="btn-ghost" onclick="enterApp()">Sudah punya akun? Masuk</button>
+  </div>
+  <div style="position:absolute;bottom:32px;font-size:9px;letter-spacing:0.3em;color:rgba(154,128,96,0.4)">
+    AMORE ✦ PREMIUM WEDDING PLANNER
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+  <header>
+    <div class="header-logo">A<span>m</span>ore</div>
+    <div style="display:flex;gap:2px">
+      <button class="icon-btn" id="notifBtn" onclick="requestNotif()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+      </button>
+      <button class="icon-btn" onclick="navTo('settings')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- DASHBOARD -->
+  <div id="page-dashboard" class="page active">
+    <div class="page-header">
+      <div class="page-eyebrow">Selamat datang kembali</div>
+      <div class="page-title">Pernikahan <em>Impian</em><br>Anda</div>
+      <div class="page-sub" id="weddingDateDisplay">💍 Atur tanggal pernikahan di Pengaturan</div>
+    </div>
+    <div class="countdown-card">
+      <div class="countdown-title">Hari istimewa tiba dalam</div>
+      <div class="countdown-grid">
+        <div class="count-unit"><div class="count-num" id="countDays">--</div><div class="count-label">Hari</div></div>
+        <div class="count-sep">:</div>
+        <div class="count-unit"><div class="count-num" id="countHours">--</div><div class="count-label">Jam</div></div>
+        <div class="count-sep">:</div>
+        <div class="count-unit"><div class="count-num" id="countMins">--</div><div class="count-label">Menit</div></div>
+      </div>
+    </div>
+    <div class="summary-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div class="summary-label">Total Budget</div>
+          <div class="summary-amount"><sup>Rp</sup><span id="totalBudgetDisplay">250.000.000</span></div>
+        </div>
+        <div class="progress-wrap">
+          <svg class="progress-ring-svg" width="66" height="66">
+            <circle class="progress-ring-bg" cx="33" cy="33" r="27" stroke-width="3"/>
+            <circle class="progress-ring-fill" cx="33" cy="33" r="27" stroke-width="3" stroke-dasharray="169.6" id="ringFill" stroke-dashoffset="169.6"/>
+          </svg>
+          <div class="progress-pct" id="ringPct">0%</div>
+        </div>
+      </div>
+      <div class="summary-grid">
+        <div class="summary-stat"><div class="summary-label">Terpakai</div><div class="stat-val neutral" id="spentDisplay">Rp 0</div></div>
+        <div class="summary-stat"><div class="summary-label">Sisa</div><div class="stat-val ok" id="remainDisplay">Rp 250jt</div></div>
+        <div class="summary-stat"><div class="summary-label">Transaksi</div><div class="stat-val neutral" id="txCount">0</div></div>
+        <div class="summary-stat"><div class="summary-label">Tamu</div><div class="stat-val neutral" id="guestCountHeader">0</div></div>
+      </div>
+    </div>
+    <div class="section-header"><span class="section-title">Aksi Cepat</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px">
+      <button class="btn-outline" onclick="openAddExpense()">+ Tambah Biaya</button>
+      <button class="btn-outline" onclick="openAddGuest()">+ Tambah Tamu</button>
+    </div>
+    <div class="section-header">
+      <span class="section-title">Kategori</span>
+      <button class="btn-ghost" style="padding:0;font-size:10px" onclick="navTo('budget')">Lihat Semua →</button>
+    </div>
+    <div class="categories" id="topCategories"></div>
+  </div>
+
+  <!-- BUDGET -->
+  <div id="page-budget" class="page">
+    <div class="page-header">
+      <div class="page-eyebrow">Kelola Anggaran</div>
+      <div class="page-title">Budget <em>Planner</em></div>
+      <div class="page-sub">Pantau setiap kategori pengeluaran</div>
+    </div>
+    <div class="categories" id="allCategories"></div>
+  </div>
+
+  <!-- VENDORS -->
+  <div id="page-vendors" class="page">
+    <div class="page-header">
+      <div class="page-eyebrow">Track Pengeluaran</div>
+      <div class="page-title">Vendor & <em>Expenses</em></div>
+      <div class="page-sub">Rincian biaya per vendor & item</div>
+    </div>
+    <div class="expense-list" id="expensesList"></div>
+  </div>
+
+  <!-- GUESTS -->
+  <div id="page-guests" class="page">
+    <div class="page-header">
+      <div class="page-eyebrow">Daftar Undangan</div>
+      <div class="page-title">Guest <em>List</em></div>
+      <div class="page-sub" id="guestCount">0 tamu terdaftar</div>
+    </div>
+    <div class="guest-controls">
+      <input class="guest-filter" type="text" placeholder="Cari tamu..." oninput="filterGuests(this.value)">
+    </div>
+    <div class="guest-list" id="guestListEl"></div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div id="page-checklist" class="page">
+    <div class="page-header">
+      <div class="page-eyebrow">Timeline Persiapan</div>
+      <div class="page-title">Wedding <em>Checklist</em></div>
+      <div class="page-sub">Panduan lengkap langkah demi langkah</div>
+    </div>
+    <div class="check-progress" id="checkProgress">0 dari 0 selesai</div>
+    <div class="checklist" id="checklistEl"></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="page-settings" class="page">
+    <div class="page-header">
+      <div class="page-eyebrow">Pengaturan</div>
+      <div class="page-title">Profil <em>Acara</em></div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">Informasi Pernikahan</div>
+      <div class="form-group"><label class="form-label">Nama Pasangan</label><input class="form-input" id="coupleName" placeholder="e.g. Reza & Anisa" oninput="saveSettings()"></div>
+      <div class="form-group"><label class="form-label">Tanggal Pernikahan</label><input class="form-input" id="weddingDate" type="date" oninput="saveSettings();updateCountdown()"></div>
+      <div class="form-group"><label class="form-label">Total Budget (Rp)</label><input class="form-input" id="totalBudgetInput" type="number" placeholder="250000000" oninput="saveSettings();updateBudgetDisplay()"></div>
+      <div class="form-group"><label class="form-label">Lokasi Acara</label><input class="form-input" id="venueLocation" placeholder="e.g. Jakarta Selatan" oninput="saveSettings()"></div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">Preferensi</div>
+      <div class="setting-item"><div><div class="setting-label">Notifikasi Pengingat</div><div class="setting-sub">Ingatkan deadline vendor & pembayaran</div></div><button class="toggle on" onclick="this.classList.toggle('on')"></button></div>
+      <div class="setting-item"><div><div class="setting-label">Laporan Mingguan</div><div class="setting-sub">Ringkasan budget setiap Senin</div></div><button class="toggle" onclick="this.classList.toggle('on')"></button></div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">Laporan & Data</div>
+      <button class="btn-outline" style="width:100%;margin-bottom:10px" onclick="showReport()">📊 Laporan Lengkap</button>
+      <button class="btn-outline" style="width:100%;margin-bottom:10px;border-color:rgba(122,158,126,0.35);color:var(--sage)" onclick="exportData()">📤 Export JSON</button>
+      <button class="btn-ghost" style="width:100%;color:var(--rose)" onclick="if(confirm('Reset semua data?'))resetData()">🗑 Reset Semua Data</button>
+    </div>
+    <div id="installSection" style="display:none" class="settings-section">
+      <div class="settings-title">Install Aplikasi</div>
+      <button class="btn-gold" style="width:100%" onclick="triggerInstall()">📲 Install ke Home Screen</button>
+      <div style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:8px">Gunakan layaknya aplikasi native</div>
+    </div>
+    <div style="text-align:center;margin-top:28px;padding-bottom:8px">
+      <div class="summary-label" style="font-size:9px;letter-spacing:0.25em">AMORE WEDDING PLANNER</div>
+      <div style="font-size:10px;color:var(--gold);letter-spacing:0.15em;margin-top:4px">✦ Premium Edition v2.1 ✦</div>
+      <div style="font-size:10px;color:rgba(154,128,96,0.4);margin-top:6px;letter-spacing:0.1em">Made with love for Indonesian couples</div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <button class="nav-item active" data-page="dashboard" onclick="navTo('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg>
+      <span>Beranda</span>
+    </button>
+    <button class="nav-item" data-page="budget" onclick="navTo('budget')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M14.5 9a2.5 2.5 0 00-5 0v6a2.5 2.5 0 005 0"/><path d="M12 6v2M12 16v2"/></svg>
+      <span>Budget</span>
+    </button>
+    <button class="nav-item" data-page="vendors" onclick="navTo('vendors')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0H5m14 0h2M5 21H3M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 4h6"/></svg>
+      <span>Vendor</span>
+    </button>
+    <button class="nav-item" data-page="guests" onclick="navTo('guests')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      <span>Tamu</span>
+    </button>
+    <button class="nav-item" data-page="checklist" onclick="navTo('checklist')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+      <span>Checklist</span>
+    </button>
+  </nav>
+
+  <button class="fab" onclick="handleFab()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+
+  <!-- INSTALL BANNER -->
+  <div id="installBanner">
+    <div class="install-icon">💍</div>
+    <div class="install-text">
+      <div class="install-title">Install Amore</div>
+      <div class="install-sub">Akses lebih cepat dari home screen</div>
+    </div>
+    <button class="install-btn" onclick="triggerInstall()">Install</button>
+    <button class="install-close" onclick="document.getElementById('installBanner').classList.remove('show')">✕</button>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="overlay" id="addExpenseModal">
+  <div class="drawer">
+    <div class="drawer-handle"></div>
+    <div class="drawer-title">Tambah Pengeluaran</div>
+    <div class="form-group"><label class="form-label">Nama Pengeluaran</label><input class="form-input" id="expName" placeholder="e.g. DP Venue, Baju Pengantin..."></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Jumlah (Rp)</label><input class="form-input" id="expAmount" type="number" placeholder="5000000"></div>
+      <div class="form-group"><label class="form-label">Kategori</label>
+        <select class="form-input" id="expCategory">
+          <option value="Venue">Venue</option><option value="Katering">Katering</option>
+          <option value="Fotografer">Fotografer</option><option value="Baju">Baju Pengantin</option>
+          <option value="Dekorasi">Dekorasi</option><option value="Hiburan">Hiburan & Band</option>
+          <option value="Undangan">Undangan</option><option value="Honeymoon">Honeymoon</option>
+          <option value="Lainnya">Lainnya</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Tanggal</label><input class="form-input" id="expDate" type="date"></div>
+    <div class="form-group"><label class="form-label">Catatan (opsional)</label><input class="form-input" id="expNote" placeholder="e.g. Termasuk dekorasi & sound system"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px">
+      <button class="btn-outline" onclick="closeModal('addExpenseModal')">Batal</button>
+      <button class="btn-gold" onclick="addExpense()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="addGuestModal">
+  <div class="drawer">
+    <div class="drawer-handle"></div>
+    <div class="drawer-title">Tambah Tamu</div>
+    <div class="form-group"><label class="form-label">Nama Tamu</label><input class="form-input" id="guestName" placeholder="Nama lengkap"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Relasi</label>
+        <select class="form-input" id="guestRelation">
+          <option value="Keluarga">Keluarga</option><option value="Teman">Teman</option>
+          <option value="Kolega">Kolega</option><option value="Tetangga">Tetangga</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Jumlah</label><input class="form-input" id="guestCount2" type="number" value="1" min="1"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px">
+      <button class="btn-outline" onclick="closeModal('addGuestModal')">Batal</button>
+      <button class="btn-gold" onclick="addGuest()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="reportModal">
+  <div class="drawer">
+    <div class="drawer-handle"></div>
+    <div class="drawer-title">Laporan Lengkap</div>
+    <div id="reportContent"></div>
+    <div style="margin-top:18px">
+      <button class="btn-outline" style="width:100%" onclick="closeModal('reportModal')">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EDIT MODALS ═══ -->
+
+<!-- EDIT CATEGORY BUDGET -->
+<div class="overlay" id="editCategoryModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span id="editCatTitle">Edit Budget Kategori</span>
+      <button class="close-btn" onclick="closeModal('editCategoryModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editCatIndex">
+      <div class="form-field">
+        <label>Estimasi Budget</label>
+        <input type="number" id="editCatBudget" class="input" placeholder="Masukkan estimasi">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('editCategoryModal')">Batal</button>
+      <button class="btn-primary" onclick="updateCategoryBudget()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT EXPENSE -->
+<div class="overlay" id="editExpenseModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span>Edit Pengeluaran</span>
+      <button class="close-btn" onclick="closeModal('editExpenseModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editExpIndex">
+      <div class="form-field">
+        <label>Nama Item</label>
+        <input type="text" id="editExpName" class="input" placeholder="Contoh: Catering Akad">
+      </div>
+      <div class="form-field">
+        <label>Jumlah (Rp)</label>
+        <input type="number" id="editExpAmount" class="input" placeholder="50000000">
+      </div>
+      <div class="form-field">
+        <label>Kategori</label>
+        <select id="editExpCategory" class="input">
+          <option value="Venue">Venue</option><option value="Katering">Katering</option>
+          <option value="Fotografer">Fotografer</option><option value="Baju">Baju Pengantin</option>
+          <option value="Dekorasi">Dekorasi</option><option value="Hiburan">Hiburan & Band</option>
+          <option value="Undangan">Undangan</option><option value="Honeymoon">Honeymoon</option>
+          <option value="Lainnya">Lainnya</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Tanggal</label>
+        <input type="date" id="editExpDate" class="input">
+      </div>
+      <div class="form-field">
+        <label>Catatan (Opsional)</label>
+        <textarea id="editExpNote" class="input" rows="2" placeholder="Catatan tambahan..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('editExpenseModal')">Batal</button>
+      <button class="btn-primary" onclick="updateExpense()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT GUEST -->
+<div class="overlay" id="editGuestModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span>Edit Tamu</span>
+      <button class="close-btn" onclick="closeModal('editGuestModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editGuestIndex">
+      <div class="form-field">
+        <label>Nama Tamu</label>
+        <input type="text" id="editGuestName" class="input" placeholder="Nama lengkap tamu">
+      </div>
+      <div class="form-field">
+        <label>Relasi</label>
+        <select id="editGuestRelation" class="input">
+          <option value="Keluarga">Keluarga</option>
+          <option value="Teman">Teman</option>
+          <option value="Kolega">Kolega</option>
+          <option value="Tetangga">Tetangga</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Jumlah Tamu</label>
+        <input type="number" id="editGuestCount" class="input" value="1" min="1">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('editGuestModal')">Batal</button>
+      <button class="btn-primary" onclick="updateGuest()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT CHECKLIST -->
+<div class="overlay" id="editCheckModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span>Edit Task</span>
+      <button class="close-btn" onclick="closeModal('editCheckModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editCheckId">
+      <div class="form-field">
+        <label>Nama Task</label>
+        <input type="text" id="editCheckTask" class="input" placeholder="Nama tugas">
+      </div>
+      <div class="form-field">
+        <label>Timeline</label>
+        <input type="text" id="editCheckMonths" class="input" placeholder="Contoh: 6-12 bulan">
+      </div>
+      <div class="form-field">
+        <label>Deadline</label>
+        <input type="text" id="editCheckDue" class="input" placeholder="Contoh: H-180">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('editCheckModal')">Batal</button>
+      <button class="btn-primary" onclick="updateChecklist()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════
+//  DATA STRUCTURE
+// ═══════════════════════════════
+const CATEGORIES=[
+  {name:'Venue',icon:'🏛️',budget:60000000},
+  {name:'Katering',icon:'🍽️',budget:50000000},
+  {name:'Fotografer',icon:'📸',budget:15000000},
+  {name:'Baju',icon:'👗',budget:25000000},
+  {name:'Dekorasi',icon:'💐',budget:20000000},
+  {name:'Hiburan',icon:'🎵',budget:12000000},
+  {name:'Undangan',icon:'💌',budget:8000000},
+  {name:'Honeymoon',icon:'✈️',budget:40000000},
+  {name:'Lainnya',icon:'📦',budget:20000000}
+];
+
+let state={
+  settings:{couple:'',date:'',budget:250000000,venue:''},
+  expenses:[
+    {name:'DP Gedung Grand Ballroom',amount:20000000,category:'Venue',date:'2026-01-15',note:'Pembayaran pertama 30%'},
+    {name:'Paket Makeup & Hairdo',amount:8500000,category:'Baju',date:'2026-02-10',note:'Untuk pengantin + 2 orang tua'},
+    {name:'Sewa Gaun Pengantin',amount:15000000,category:'Baju',date:'2026-02-12',note:'Custom design dengan aksesoris'},
+    {name:'Fotografer & Videografer',amount:12000000,category:'Fotografer',date:'2026-02-20',note:'Paket full day + album premium'},
+    {name:'Dekorasi Pelaminan',amount:18000000,category:'Dekorasi',date:'2026-02-25',note:'Fresh flowers + lighting setup'},
+    {name:'Undangan Digital & Cetak',amount:5000000,category:'Undangan',date:'2026-03-01',note:'500 undangan cetak + website'}
+  ],
+  guests:[
+    {name:'Budi Santoso',relation:'Keluarga',count:4,status:'confirmed'},
+    {name:'Siti Nurhaliza',relation:'Teman',count:2,status:'pending'},
+    {name:'Ahmad Fauzi',relation:'Kolega',count:3,status:'confirmed'},
+    {name:'Dewi Lestari',relation:'Keluarga',count:5,status:'confirmed'},
+    {name:'Roni Prasetyo',relation:'Teman',count:2,status:'pending'}
+  ],
+  checklist:[
+    {id:1,task:'Tentukan tanggal & venue pernikahan',months:'6-12 bulan sebelumnya',due:'H-365',done:true},
+    {id:2,task:'Booking fotografer & videografer',months:'6-9 bulan',due:'H-270',done:true},
+    {id:3,task:'Pilih & pesan gaun pengantin',months:'6-8 bulan',due:'H-240',done:false},
+    {id:4,task:'Cari & booking vendor katering',months:'4-6 bulan',due:'H-180',done:false},
+    {id:5,task:'Booking makeup artist & hair stylist',months:'4-6 bulan',due:'H-180',done:false},
+    {id:6,task:'Pesan undangan cetak & digital',months:'3-4 bulan',due:'H-120',done:false},
+    {id:7,task:'Pilih dekorator & finalisasi tema',months:'3-4 bulan',due:'H-120',done:false},
+    {id:8,task:'Booking entertainment & band',months:'2-3 bulan',due:'H-90',done:false},
+    {id:9,task:'Fitting gaun & jas pengantin',months:'1-2 bulan',due:'H-60',done:false},
+    {id:10,task:'Finalisasi rundown acara',months:'1 bulan',due:'H-30',done:false}
+  ],
+  categories: [...CATEGORIES]
+};
+
+let currentPage='dashboard';
+
+// ═══════════════════════════════
+//  STORAGE
+// ═══════════════════════════════
+function saveState(){localStorage.setItem('amore-state',JSON.stringify(state));}
+function loadState(){
+  const s=localStorage.getItem('amore-state');
+  if(s){
+    const loaded = JSON.parse(s);
+    state = {
+      ...loaded,
+      categories: loaded.categories || [...CATEGORIES]
+    };
+  }
+  renderDashboard();
+  loadSettings();
+}
+
+// ═══════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════
+function enterApp(){
+  document.getElementById('splash').classList.add('out');
+  setTimeout(()=>{document.getElementById('splash').style.display='none';updateCountdown();},900);
+}
+
+function navTo(page){
+  currentPage=page;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelector(`[data-page="${page}"]`).classList.add('active');
+  if(page==='dashboard'){renderDashboard();updateCountdown();}
+  else if(page==='budget')renderBudget();
+  else if(page==='vendors')renderVendors();
+  else if(page==='guests')renderGuests();
+  else if(page==='checklist')renderChecklist();
+  else if(page==='settings')loadSettings();
+}
+
+// ═══════════════════════════════
+//  FORMAT
+// ═══════════════════════════════
+function fmt(n){
+  const m=Math.abs(n);
+  if(m>=1e9)return(n/1e9).toFixed(1)+'M';
+  if(m>=1e6)return(n/1e6).toFixed(1)+'jt';
+  if(m>=1e3)return(n/1e3).toFixed(0)+'rb';
+  return 'Rp '+n.toLocaleString('id-ID');
+}
+
+// ═══════════════════════════════
+//  DASHBOARD
+// ═══════════════════════════════
+function renderDashboard(){
+  updateBudgetDisplay();
+  const top3=state.categories.slice(0,3);
+  const el=document.getElementById('topCategories');
+  el.innerHTML=top3.map((c,i)=>renderCategoryCard(c,i)).join('');
+}
+
+function updateBudgetDisplay(){
+  const b=Number(state.settings.budget)||250000000;
+  const sp=state.expenses.reduce((a,e)=>a+Number(e.amount),0);
+  const rm=b-sp;
+  const pct=Math.round(sp/b*100);
+  document.getElementById('totalBudgetDisplay').textContent=(b/1e6).toFixed(0)+'.000.000';
+  document.getElementById('spentDisplay').textContent=fmt(sp);
+  document.getElementById('remainDisplay').textContent=fmt(Math.abs(rm));
+  document.getElementById('txCount').textContent=state.expenses.length;
+  document.getElementById('guestCountHeader').textContent=state.guests.reduce((a,g)=>a+Number(g.count||1),0);
+  document.getElementById('ringPct').textContent=pct+'%';
+  const circ=169.6;
+  document.getElementById('ringFill').style.strokeDashoffset=circ-(circ*pct/100);
+  const rv=document.getElementById('remainDisplay');
+  rv.classList.remove('ok','warning');
+  rv.classList.add(rm<0?'warning':'ok');
+}
+
+function updateCountdown(){
+  const d=state.settings.date;
+  if(!d){document.getElementById('weddingDateDisplay').textContent='💍 Atur tanggal pernikahan di Pengaturan';return;}
+  const now=new Date();const target=new Date(d);
+  document.getElementById('weddingDateDisplay').textContent='💍 '+new Date(d).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+  const diff=target-now;
+  if(diff<0){document.getElementById('countDays').textContent='🎉';document.getElementById('countHours').textContent='🎉';document.getElementById('countMins').textContent='🎉';return;}
+  const days=Math.floor(diff/864e5);
+  const hrs=Math.floor((diff%864e5)/36e5);
+  const mins=Math.floor((diff%36e5)/6e4);
+  document.getElementById('countDays').textContent=days;
+  document.getElementById('countHours').textContent=hrs.toString().padStart(2,'0');
+  document.getElementById('countMins').textContent=mins.toString().padStart(2,'0');
+}
+
+// ═══════════════════════════════
+//  BUDGET
+// ═══════════════════════════════
+function renderBudget(){
+  const el=document.getElementById('allCategories');
+  el.innerHTML=state.categories.map((c,i)=>renderCategoryCard(c,i,true)).join('');
+}
+
+function getCatSpent(cat){return state.expenses.filter(e=>e.category===cat).reduce((a,e)=>a+Number(e.amount),0);}
+
+function renderCategoryCard(c,i,showEdit=false){
+  const sp=getCatSpent(c.name);
+  const pct=c.budget>0?Math.round(sp/c.budget*100):0;
+  const editBtn = showEdit ? `<button class="category-edit-btn" onclick="event.stopPropagation();openEditCategory(${i})">Edit</button>` : '';
+  return`
+    <div class="category-card" onclick="navTo('vendors')">
+      ${editBtn}
+      <div class="category-header">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="category-icon">${c.icon}</div>
+          <div class="category-name">${c.name}</div>
+        </div>
+      </div>
+      <div class="category-spent">${fmt(sp)}</div>
+      <div class="category-budget">dari ${fmt(c.budget)}</div>
+      <div class="category-bar"><div class="category-bar-fill" style="width:${Math.min(pct,100)}%"></div></div>
+    </div>`;
+}
+
+// ══ EDIT CATEGORY ══
+function openEditCategory(index){
+  const cat = state.categories[index];
+  document.getElementById('editCatIndex').value = index;
+  document.getElementById('editCatTitle').textContent = `Edit Budget ${cat.name}`;
+  document.getElementById('editCatBudget').value = cat.budget;
+  openModal('editCategoryModal');
+}
+
+function updateCategoryBudget(){
+  const index = Number(document.getElementById('editCatIndex').value);
+  const budget = Number(document.getElementById('editCatBudget').value);
+  if(!budget || budget < 0){
+    showToast('⚠️ Masukkan budget yang valid');
+    return;
+  }
+  state.categories[index].budget = budget;
+  saveState();
+  closeModal('editCategoryModal');
+  renderBudget();
+  showToast('✓ Budget kategori berhasil diupdate');
+}
+
+// ═══════════════════════════════
+//  VENDORS/EXPENSES
+// ═══════════════════════════════
+function renderVendors(){
+  const el=document.getElementById('expensesList');
+  if(!state.expenses.length){el.innerHTML='<div class="empty-state">Belum ada pengeluaran tercatat</div>';return;}
+  el.innerHTML=state.expenses.map((e,i)=>{
+    const cat=state.categories.find(c=>c.name===e.category);
+    return`
+    <div class="expense-item">
+      <div class="expense-icon">${cat?cat.icon:'📦'}</div>
+      <div class="expense-info">
+        <div class="expense-name">${e.name}</div>
+        <div class="expense-meta">${e.category} • ${new Date(e.date).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})}</div>
+      </div>
+      <div class="expense-amount">${fmt(e.amount)}</div>
+      <div class="expense-actions">
+        <button class="expense-edit-btn" onclick="openEditExpense(${i})">Edit</button>
+        <button class="expense-delete-btn" onclick="deleteExpense(${i})">Hapus</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══ EDIT EXPENSE ══
+function openEditExpense(index){
+  const exp = state.expenses[index];
+  document.getElementById('editExpIndex').value = index;
+  document.getElementById('editExpName').value = exp.name;
+  document.getElementById('editExpAmount').value = exp.amount;
+  document.getElementById('editExpCategory').value = exp.category;
+  document.getElementById('editExpDate').value = exp.date;
+  document.getElementById('editExpNote').value = exp.note || '';
+  openModal('editExpenseModal');
+}
+
+function updateExpense(){
+  const index = Number(document.getElementById('editExpIndex').value);
+  const name = document.getElementById('editExpName').value.trim();
+  const amount = Number(document.getElementById('editExpAmount').value);
+  
+  if(!name || !amount){
+    showToast('⚠️ Isi nama dan jumlah terlebih dahulu');
+    return;
+  }
+  
+  state.expenses[index] = {
+    name: name,
+    amount: amount,
+    category: document.getElementById('editExpCategory').value,
+    date: document.getElementById('editExpDate').value,
+    note: document.getElementById('editExpNote').value
+  };
+  
+  saveState();
+  closeModal('editExpenseModal');
+  renderVendors();
+  renderDashboard();
+  showToast('✓ Pengeluaran berhasil diupdate');
+}
+
+// ═══════════════════════════════
+//  GUESTS
+// ═══════════════════════════════
+function renderGuests(filter=''){
+  document.getElementById('guestCount').textContent=state.guests.reduce((a,g)=>a+Number(g.count||1),0)+' tamu terdaftar';
+  const list=state.guests.filter(g=>!filter||g.name.toLowerCase().includes(filter.toLowerCase()));
+  const el=document.getElementById('guestListEl');
+  if(!list.length){el.innerHTML='<div class="empty-state">Belum ada tamu terdaftar</div>';return;}
+  el.innerHTML=list.map((g,i)=>`
+    <div class="guest-item">
+      <div class="guest-avatar">${g.name[0].toUpperCase()}</div>
+      <div class="guest-info"><div class="guest-name">${g.name}</div><div class="guest-rel">${g.relation} • ${g.count} orang</div></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">
+        <span class="chip ${g.status==='confirmed'?'chip-sage':'chip-gold'}" onclick="toggleGuestStatus(${state.guests.indexOf(g)})" style="cursor:pointer">${g.status==='confirmed'?'✓ Konfirmasi':'Pending'}</span>
+        <button class="expense-edit-btn" onclick="openEditGuest(${state.guests.indexOf(g)})">Edit</button>
+        <button class="expense-delete-btn" onclick="deleteGuest(${state.guests.indexOf(g)})">Hapus</button>
+      </div>
+    </div>`).join('');
+}
+
+function filterGuests(v){renderGuests(v);}
+function toggleGuestStatus(i){state.guests[i].status=state.guests[i].status==='confirmed'?'pending':'confirmed';saveState();renderGuests();}
+function deleteGuest(i){state.guests.splice(i,1);saveState();renderGuests();updateBudgetDisplay();}
+
+// ══ EDIT GUEST ══
+function openEditGuest(index){
+  const guest = state.guests[index];
+  document.getElementById('editGuestIndex').value = index;
+  document.getElementById('editGuestName').value = guest.name;
+  document.getElementById('editGuestRelation').value = guest.relation;
+  document.getElementById('editGuestCount').value = guest.count;
+  openModal('editGuestModal');
+}
+
+function updateGuest(){
+  const index = Number(document.getElementById('editGuestIndex').value);
+  const name = document.getElementById('editGuestName').value.trim();
+  
+  if(!name){
+    showToast('⚠️ Isi nama tamu terlebih dahulu');
+    return;
+  }
+  
+  state.guests[index] = {
+    ...state.guests[index],
+    name: name,
+    relation: document.getElementById('editGuestRelation').value,
+    count: Number(document.getElementById('editGuestCount').value) || 1
+  };
+  
+  saveState();
+  closeModal('editGuestModal');
+  renderGuests();
+  updateBudgetDisplay();
+  showToast('✓ Data tamu berhasil diupdate');
+}
+
+// ═══════════════════════════════
+//  CHECKLIST
+// ═══════════════════════════════
+function renderChecklist(){
+  const done=state.checklist.filter(c=>c.done).length;
+  document.getElementById('checkProgress').textContent=done+' dari '+state.checklist.length+' selesai';
+  document.getElementById('checklistEl').innerHTML=state.checklist.map(c=>`
+    <div class="check-item ${c.done?'done':''}" onclick="toggleCheck(${c.id})">
+      <div class="check-box"><span class="check-icon">✓</span></div>
+      <div class="check-content">
+        <div class="check-title">${c.task}</div>
+        <div class="check-meta">${c.months} <span class="check-due">• ${c.due}</span></div>
+      </div>
+      <button class="check-edit-btn" onclick="event.stopPropagation();openEditCheck(${c.id})">Edit</button>
+    </div>`).join('');
+}
+
+function toggleCheck(id){const c=state.checklist.find(x=>x.id===id);if(c){c.done=!c.done;saveState();renderChecklist();}}
+
+// ══ EDIT CHECKLIST ══
+function openEditCheck(id){
+  const check = state.checklist.find(c => c.id === id);
+  if(!check) return;
+  document.getElementById('editCheckId').value = id;
+  document.getElementById('editCheckTask').value = check.task;
+  document.getElementById('editCheckMonths').value = check.months;
+  document.getElementById('editCheckDue').value = check.due;
+  openModal('editCheckModal');
+}
+
+function updateChecklist(){
+  const id = Number(document.getElementById('editCheckId').value);
+  const task = document.getElementById('editCheckTask').value.trim();
+  
+  if(!task){
+    showToast('⚠️ Isi nama task terlebih dahulu');
+    return;
+  }
+  
+  const check = state.checklist.find(c => c.id === id);
+  if(!check) return;
+  
+  check.task = task;
+  check.months = document.getElementById('editCheckMonths').value;
+  check.due = document.getElementById('editCheckDue').value;
+  
+  saveState();
+  closeModal('editCheckModal');
+  renderChecklist();
+  showToast('✓ Task berhasil diupdate');
+}
+
+// ═══════════════════════════════
+//  SETTINGS
+// ═══════════════════════════════
+function loadSettings(){
+  ['coupleName','weddingDate','totalBudgetInput','venueLocation'].forEach((id,i)=>{
+    document.getElementById(id).value=[state.settings.couple,state.settings.date,state.settings.budget,state.settings.venue][i]||'';
+  });
+  if(deferredPrompt)document.getElementById('installSection').style.display='block';
+}
+
+function saveSettings(){
+  state.settings={
+    couple:document.getElementById('coupleName').value,
+    date:document.getElementById('weddingDate').value,
+    budget:Number(document.getElementById('totalBudgetInput').value)||250000000,
+    venue:document.getElementById('venueLocation').value
+  };
+  saveState();
+}
+
+// ═══════════════════════════════
+//  ADD EXPENSE
+// ═══════════════════════════════
+function openAddExpense(){document.getElementById('expDate').value=new Date().toISOString().split('T')[0];openModal('addExpenseModal');}
+function addExpense(){
+  const n=document.getElementById('expName').value.trim(),a=Number(document.getElementById('expAmount').value);
+  if(!n||!a){showToast('⚠️ Isi nama dan jumlah terlebih dahulu');return;}
+  state.expenses.push({name:n,amount:a,category:document.getElementById('expCategory').value,date:document.getElementById('expDate').value,note:document.getElementById('expNote').value});
+  saveState();closeModal('addExpenseModal');
+  ['expName','expAmount','expNote'].forEach(id=>document.getElementById(id).value='');
+  showToast('✓ Pengeluaran berhasil disimpan');renderDashboard();
+}
+function deleteExpense(i){state.expenses.splice(i,1);saveState();renderVendors();updateBudgetDisplay();}
+
+// ═══════════════════════════════
+//  ADD GUEST
+// ═══════════════════════════════
+function openAddGuest(){openModal('addGuestModal');}
+function addGuest(){
+  const n=document.getElementById('guestName').value.trim();
+  if(!n){showToast('⚠️ Isi nama tamu terlebih dahulu');return;}
+  state.guests.push({name:n,relation:document.getElementById('guestRelation').value,count:Number(document.getElementById('guestCount2').value)||1,status:'pending'});
+  saveState();closeModal('addGuestModal');
+  document.getElementById('guestName').value='';
+  showToast('✓ Tamu berhasil ditambahkan');renderGuests();updateBudgetDisplay();
+}
+
+// ═══════════════════════════════
+//  REPORT
+// ═══════════════════════════════
+function showReport(){
+  const b=Number(state.settings.budget)||250000000,sp=state.expenses.reduce((a,e)=>a+Number(e.amount),0),rm=b-sp,pct=Math.round(sp/b*100);
+  document.getElementById('reportContent').innerHTML=`
+    <div class="report-card">
+      <div class="report-row"><span class="report-key">Total Budget</span><span class="report-val">${fmt(b)}</span></div>
+      <div class="report-row"><span class="report-key">Terpakai</span><span class="report-val" style="color:${rm<0?'var(--error)':'var(--gold-light)'}">${fmt(sp)}</span></div>
+      <div class="report-row"><span class="report-key">Sisa</span><span class="report-val" style="color:${rm<0?'var(--error)':'var(--sage)'}">${fmt(Math.abs(rm))}</span></div>
+      <div class="report-row"><span class="report-key">Persentase Terpakai</span><span class="report-val">${pct}%</span></div>
+      <div class="report-row"><span class="report-key">Jumlah Transaksi</span><span class="report-val">${state.expenses.length}</span></div>
+      <div class="report-row"><span class="report-key">Total Tamu Undangan</span><span class="report-val">${state.guests.reduce((a,g)=>a+Number(g.count||1),0)} orang</span></div>
+      <div class="report-row"><span class="report-key">Checklist Selesai</span><span class="report-val">${state.checklist.filter(c=>c.done).length}/${state.checklist.length}</span></div>
+    </div>
+    <div class="report-card">
+      <div style="font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);margin-bottom:10px">Per Kategori</div>
+      ${state.categories.map(c=>{const s=getCatSpent(c.name);return s?`<div class="report-row"><span class="report-key">${c.icon} ${c.name}</span><span class="report-val">${fmt(s)}</span></div>`:''}).join('')||'<div class="empty-state" style="padding:12px 0">Belum ada pengeluaran</div>'}
+    </div>`;
+  openModal('reportModal');
+}
+
+// ═══════════════════════════════
+//  EXPORT
+// ═══════════════════════════════
+function exportData(){
+  const json=JSON.stringify(state,null,2);
+  const blob=new Blob([json],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='amore-backup-'+new Date().toISOString().split('T')[0]+'.json';
+  a.click();
+  showToast('✓ Data berhasil diexport');
+}
+
+function resetData(){state.expenses=[];state.guests=[];state.checklist.forEach(c=>c.done=false);saveState();renderDashboard();showToast('✓ Data telah direset');}
+
+// ═══════════════════════════════
+//  MODALS
+// ═══════════════════════════════
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+
+// ═══════════════════════════════
+//  FAB
+// ═══════════════════════════════
+function handleFab(){
+  if(currentPage==='guests')openAddGuest();
+  else openAddExpense();
+}
+
+// ═══════════════════════════════
+//  TOAST
+// ═══════════════════════════════
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+
+// ═══════════════════════════════
+//  COUNTDOWN TICK
+// ═══════════════════════════════
+setInterval(()=>{if(currentPage==='dashboard')updateCountdown();},60000);
+
+// ═══════════════════════════════
+//  PWA: SERVICE WORKER
+// ═══════════════════════════════
+let deferredPrompt=null;
+let swRegistration=null;
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').then(reg=>{
+    swRegistration=reg;
+    console.log('[App] SW registered:', reg.scope);
+    reg.addEventListener('updatefound',()=>{
+      const nw=reg.installing;
+      nw.addEventListener('statechange',()=>{
+        if(nw.state==='installed'&&navigator.serviceWorker.controller){
+          document.getElementById('updateBanner').style.display='block';
+        }
+      });
+    });
+  }).catch(e=>console.warn('[App] SW failed:',e));
+}
+
+function updateApp(){
+  if(swRegistration?.waiting){swRegistration.waiting.postMessage({type:'SKIP_WAITING'});}
+  window.location.reload();
+}
+
+// ── INSTALL PROMPT ──
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPrompt=e;
+  document.getElementById('installSection').style.display='block';
+  setTimeout(()=>document.getElementById('installBanner').classList.add('show'),3500);
+});
+
+function triggerInstall(){
+  if(!deferredPrompt){showToast('Buka di Chrome/Edge untuk install');return;}
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(r=>{
+    if(r.outcome==='accepted')showToast('✓ Amore berhasil diinstall!');
+    deferredPrompt=null;
+    document.getElementById('installBanner').classList.remove('show');
+  });
+}
+
+window.addEventListener('appinstalled',()=>{showToast('✓ Amore sudah terpasang di home screen!');document.getElementById('installBanner').classList.remove('show');});
+
+// ── ONLINE/OFFLINE ──
+function updateOnline(){document.getElementById('offlineBanner').style.display=navigator.onLine?'none':'block';}
+window.addEventListener('online',updateOnline);window.addEventListener('offline',updateOnline);
+updateOnline();
+
+// ── NOTIF ──
+function requestNotif(){
+  if(!('Notification' in window)){showToast('Browser tidak mendukung notifikasi');return;}
+  Notification.requestPermission().then(p=>{
+    if(p==='granted'){showToast('✓ Notifikasi diaktifkan');new Notification('💍 Amore',{body:'Notifikasi pernikahan Anda aktif!'});}
+    else showToast('Notifikasi tidak diizinkan');
+  });
+}
+
+// ── INIT ──
+loadState();
+document.getElementById('expDate').value=new Date().toISOString().split('T')[0];
+
+// Handle URL params (shortcuts)
+const urlP=new URLSearchParams(location.search);
+if(urlP.get('action')==='add-expense'){enterApp();setTimeout(openAddExpense,900);}
+else if(urlP.get('page')){enterApp();setTimeout(()=>navTo(urlP.get('page')),900);}
+</script>
+</body>
+</html>
